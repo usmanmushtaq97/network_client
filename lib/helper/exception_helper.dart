@@ -3,4 +3,4 @@
 //usmanmushtaq848@gmail.com
 //
 
-/// automatically handle process the data and handle all type of the rwquest
+/// automatically handle process the data and handle all type of the response base on the code will show dialog and pop

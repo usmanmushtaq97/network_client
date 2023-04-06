@@ -3,9 +3,11 @@
 // usmanmushtaq848@gmail.com
 //
 
+import 'dart:convert';
 import 'dart:io';
 import 'package:network_client/api/network/base_network.dart';
 import 'package:http/http.dart' as http;
+import 'package:network_client/constants/app_constatns.dart';
 import '../../helper/utils.dart';
 
 class NetWorkClient extends BaseApiService {
@@ -52,13 +54,50 @@ class NetWorkClient extends BaseApiService {
     } else {
       header = {HttpHeaders.acceptCharsetHeader: 'application/json'};
     }
-    //response
-    dynamic response = analyticEngine(
-        url: url, body: data, header: header, requestType: 'POST');
+    appPrint('body############:$data');
+    appPrint('DebugURl############:$url');
+    appPrint('header############:$header');
+
+    dynamic response;
+    try {
+      //response
+      response = await analyticEngine(
+          url: url, body: data, header: header, requestType: 'POST');
+    response =  await _processResponse(response, url, onComplete, onError);
+    } on SocketException {
+      throw ('No Internet Connection');
+    }
+
+    return response;
+  }
+
+  dynamic _processResponse(http.Response response, url,
+      Function onComplete, Function onError) async {
+    // required onError need set lot of things that I will when i free from office  hope this I will complete this network client for  use
+    switch (response.statusCode) {
+      case 200:
+        var data = jsonDecode(response.body);
+        if (data['code'] == 0) {
+          onComplete(data);
+        }
+        return data;
+      case 400:
+        onError("Message", 400);
+        break;
+      case 500:
+        onError("Message", 500);
+        break;
+      case 404:
+        onError("Message", 404);
+        break;
+    }
+
   }
 
   /// This is a simple engin here we can handle type of request
-  Future<HttpResponse> analyticEngine(
+  /// POST means post request
+  ///  GET means get request
+  Future<http.Response> analyticEngine(
       {required url,
       required String requestType,
       dynamic body,
@@ -67,7 +106,7 @@ class NetWorkClient extends BaseApiService {
     if (requestType == 'POST') {
       response = await getClient()
           .post(url, body: body, headers: header)
-          .timeout(const Duration(seconds: 90));
+          .timeout(const Duration(seconds: AppConstants.apiTimeOut));
     } else {
       response = await getClient()
           .get(url, headers: header)
