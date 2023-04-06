@@ -1,17 +1,34 @@
 import 'package:flutter/material.dart';
+import 'package:network_client/get_it.dart';
+import 'package:network_client/provider/global_provider.dart';
+import 'package:network_client/routes/_routes.dart';
+import 'package:network_client/routes/route_settings.dart';
+import 'package:provider/provider.dart';
+
+import 'helper/global_services/navigation.dart';
 
 void main() {
-  runApp(const MyApp());
+  WidgetsFlutterBinding.ensureInitialized();
+  setUpLocator();
+  runApp(
+      MultiProvider(
+        providers: [
+          ChangeNotifierProvider(create: (_) => GlobalProvider()),
+        ],
+        child: const MyApp(),
+      ),);
 }
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
-
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Flutter',
+      navigatorKey: NavigationService.appNavigatorKey,
+      onGenerateRoute:GenerateRouteSettings.generateRoute,
+      initialRoute: RouteName.homePage,
       theme: ThemeData(
         // This is the theme of your application.
         //
@@ -23,8 +40,8 @@ class MyApp extends StatelessWidget {
         // Notice that the counter didn't reset back to zero; the application
         // is not restarted.
         primarySwatch: Colors.blue,
+
       ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
     );
   }
 }
