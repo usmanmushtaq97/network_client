@@ -7,8 +7,10 @@ import 'dart:io';
 import 'package:network_client/api/network/base_network.dart';
 import 'package:http/http.dart' as http;
 import '../../helper/utils.dart';
+
 class NetWorkClient extends BaseApiService {
-  var token = 'We can get the token in first call of api such as login and after first call the same token will be pass as general flow'; // here we will get token from stored value
+  var token =
+      'We can get the token in first call of api such as login and after first call the same token will be pass as general flow'; // here we will get token from stored value
   dynamic header;
 
   @override
@@ -55,21 +57,22 @@ class NetWorkClient extends BaseApiService {
         url: url, body: data, header: header, requestType: 'POST');
   }
 
-  Future<dynamic> _processResponse() async {
-    switch (4) {
-
-    }
-  }
   /// This is a simple engin here we can handle type of request
-  Future<dynamic> analyticEngine(
+  Future<HttpResponse> analyticEngine(
       {required url,
       required String requestType,
       dynamic body,
       dynamic header}) async {
     dynamic response;
-    response = await http
-        .post(url, body: body, headers: header)
-        .timeout(const Duration(seconds: 90));
+    if (requestType == 'POST') {
+      response = await getClient()
+          .post(url, body: body, headers: header)
+          .timeout(const Duration(seconds: 90));
+    } else {
+      response = await getClient()
+          .get(url, headers: header)
+          .timeout(const Duration(seconds: 90));
+    }
     return response;
   }
 
