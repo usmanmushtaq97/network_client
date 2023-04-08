@@ -28,4 +28,11 @@ class Routes {
     Navigator.pushNamedAndRemoveUntil(context, routeName, routePra,
         arguments: argument);
   }
+  /// It's working same like pop bas on cond
+  /// Whether the navigator that most tightly encloses the given context can be popped.
+  /// that  time we can use
+ static canPop(BuildContext context){
+    Navigator.canPop(context);
+ }
+
 }
