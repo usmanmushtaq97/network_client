@@ -7,6 +7,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:network_client/api/network/base_network.dart';
 import 'package:http/http.dart' as http;
+import 'package:network_client/config/network_config.dart';
 import 'package:network_client/constants/app_constatns.dart';
 import '../../helper/utils.dart';
 
@@ -14,6 +15,7 @@ class NetWorkClient extends BaseApiService {
   var token =
       'We can get the token in first call of api such as login and after first call the same token will be pass as general flow'; // here we will get token from stored value
   dynamic header;
+  final _baseUrl = NetworkConfig().getBaseUrl();
 
   @override
   Future getApi(String url) {
@@ -27,9 +29,9 @@ class NetWorkClient extends BaseApiService {
       data,
       bool loaderAllow = true,
       bool isAllowQueue = false,
-      bool checkToken = true}) {
-    // TODO: implement postApi
-    throw UnimplementedError();
+      bool checkToken = true}) async {
+    var response = await addToHttpPost(url: url);
+    return response;
   }
 
   Future<dynamic> addToHttpPost(
@@ -54,16 +56,20 @@ class NetWorkClient extends BaseApiService {
     } else {
       header = {HttpHeaders.acceptCharsetHeader: 'application/json'};
     }
+    var urlComplete = _baseUrl + url;
     appPrint('body############:$data');
+    appPrint('DebugBase############:$_baseUrl');
     appPrint('DebugURl############:$url');
+    appPrint('CompleteURl############:$urlComplete');
     appPrint('header############:$header');
 
     dynamic response;
     try {
       //response
       response = await analyticEngine(
-          url: url, body: data, header: header, requestType: 'POST');
-    response =  await _processResponse(response, url, onComplete, onError);
+          url: urlComplete, body: data, header: header, requestType: 'POST');
+      response = await _processResponse(response, url, onComplete, onError);
+      appPrint('Response############:$response');
     } on SocketException {
       throw ('No Internet Connection');
     }
@@ -71,9 +77,8 @@ class NetWorkClient extends BaseApiService {
     return response;
   }
 
-  dynamic _processResponse(http.Response response, url,
-      Function onComplete, Function onError) async {
-    // required onError need set lot of things that I will when i free from office  hope this I will complete this network client for  use
+  dynamic _processResponse(http.Response response, url, Function onComplete,
+      Function onError) async {
     switch (response.statusCode) {
       case 200:
         var data = jsonDecode(response.body);
@@ -91,7 +96,6 @@ class NetWorkClient extends BaseApiService {
         onError("Message", 404);
         break;
     }
-
   }
 
   /// This is a simple engin here we can handle type of request
@@ -107,7 +111,7 @@ class NetWorkClient extends BaseApiService {
       response = await getClient()
           .post(url, body: body, headers: header)
           .timeout(const Duration(seconds: AppConstants.apiTimeOut));
-    } else {
+    } else if (requestType == 'GET') {
       response = await getClient()
           .get(url, headers: header)
           .timeout(const Duration(seconds: 90));

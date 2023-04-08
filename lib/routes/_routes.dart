@@ -1,6 +1,5 @@
 // Created by Muhammad Usman on 12/5/2022.
-// SITC Ltd
-// usmantech197@gmail.com
+// //usmanmushtaq848@gmail.com
 // © 2022-2022  - All Rights Reserved
 
 export 'routes.dart';

@@ -8,7 +8,7 @@ class NetworkConfig {
   final _dev = 'https://dev';
   final _uat = 'https://uat';
   final _pro = 'https://productions';
-
+  // get the base url
   String getBaseUrl() {
     switch (appMode) {
       case Env.dev:
