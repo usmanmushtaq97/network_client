@@ -9,15 +9,26 @@ import 'package:network_client/provider/_provider.dart';
 import '../../routes/routes.dart';
 
 class AppLoader {
+  static final AppLoader _instance = AppLoader._internal();
+
+// factory constructor
+  factory AppLoader() {
+    return _instance;
+  }
+
+  // private constructor
+  AppLoader._internal();
+
   // context form app state such that the current context of screen
   final context = locator<GlobalProvider>().globalContext!;
+
   // hide the loading by calling this method
   void loaderHide() {
     Routes.pop(context);
   }
 
   // show the loader by calling this method
-  Future<void> loaderShow() async {
+ Future<void>  loaderShow() async {
     showGeneralDialog(
         context: context,
         transitionDuration: const Duration(milliseconds: 400),
@@ -31,3 +42,5 @@ class AppLoader {
         });
   }
 }
+
+
