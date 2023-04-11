@@ -4,3 +4,16 @@
 //
 
 /// automatically handle process the data and handle all type of the response base on the code will show dialog and pop
+class ExceptionHelper<T> {
+  void _validateRequest(
+      dynamic data
+      ){
+    /// show dialog
+
+  }
+}
+ _processResponseWithJson(){
+  /// if code 1 means success and other code means error
+   ///
+
+ }

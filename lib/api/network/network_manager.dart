@@ -199,7 +199,8 @@ class NetWorkClient extends BaseApiService {
       throw ('No Internet Connection');
     }
   }
-
+   /// process the response on the base
+  /// onComplete method
   void _processResponse(http.Response response, url,
       {required Function onComplete, required Function onError}) async {
     switch (response.statusCode) {
