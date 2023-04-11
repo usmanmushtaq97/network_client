@@ -9,15 +9,11 @@ import 'package:network_client/provider/_provider.dart';
 import '../../routes/routes.dart';
 
 class AppLoader {
-  static final AppLoader _instance = AppLoader._internal();
+  AppLoader._privateConstructor();
 
-// factory constructor
-  factory AppLoader() {
-    return _instance;
-  }
+  static final AppLoader _instance = AppLoader._privateConstructor();
 
-  // private constructor
-  AppLoader._internal();
+  static AppLoader get instance => _instance;
 
   // context form app state such that the current context of screen
   final context = locator<GlobalProvider>().globalContext!;
