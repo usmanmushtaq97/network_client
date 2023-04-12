@@ -14,6 +14,9 @@ class AuthProvider with ChangeNotifier{
      _loginService = LoginService();
    }
 
+   NetWorkApiResponse<LoginModel>? _login;
+
+   NetWorkApiResponse<LoginModel>? get login => _login;
 
 
   /// user login
@@ -25,7 +28,9 @@ class AuthProvider with ChangeNotifier{
       "user_channel_type": "tiktok" // chanel type
     };
       /// sync data  base loading
-    var data  = _loginService.login(requestObject);
+  _login = NetWorkApiResponse.loading('loading');
+
+  var data  = _loginService.login(requestObject);
       /// sync data base complete
       /// sync data base  Error
     ///  sync data base provider and exception helper for dialog and miss dialoge

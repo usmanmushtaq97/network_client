@@ -14,11 +14,11 @@ class NetWorkApiResponse<T> {
   NetWorkApiResponse(this.status , this.data, this.message);
 
 
-  NetWorkApiResponse.loading() : status = Status.LOADING ;
+  NetWorkApiResponse.loading(this.message) : status = Status.LOADING ;
 
-  NetWorkApiResponse.completed(this.data) : status = Status.COMPLETED ;
+  NetWorkApiResponse.onCompleted(this.data) : status = Status.COMPLETED ;
 
-  NetWorkApiResponse.error(this.message) : status = Status.ERROR ;
+  NetWorkApiResponse.onError(this.data) : status = Status.ERROR ;
 
 
   @override

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:network_client/get_it.dart';
+import 'package:network_client/provider/auth_provider.dart';
 import 'package:network_client/provider/global_provider.dart';
 import 'package:network_client/routes/_routes.dart';
 import 'package:network_client/routes/route_settings.dart';
@@ -14,6 +15,7 @@ void main() {
       MultiProvider(
         providers: [
           ChangeNotifierProvider(create: (_) => GlobalProvider()),
+          ChangeNotifierProvider(create: (_) => AuthProvider()),
         ],
         child: const MyApp(),
       ),);

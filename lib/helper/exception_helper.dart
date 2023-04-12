@@ -3,17 +3,34 @@
 //usmanmushtaq848@gmail.com
 //
 
-/// automatically handle process the data and handle all type of the response base on the code will show dialog and pop
-class ExceptionHelper<T> {
-  void _validateRequest(
-      dynamic data
-      ){
-    /// show dialog
+import 'package:flutter/material.dart';
 
+class ExceptionHelper<T> {
+  void _validateRequest(dynamic data) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+
+
+
+    });
+  }
+
+  /// the response
+  processResponse(
+    dynamic data,
+    Function onComplete,
+    Function onError, {
+    bool skipErrorDialog = false,
+  }) {
+    /// 1 means success
+    if (!skipErrorDialog) {
+      if (data.code != 1) {
+        _validateRequest(data);
+        onComplete(data);
+      } else {
+        onError(data);
+      }
+    } else {
+      onError(data);
+    }
   }
 }
- _processResponseWithJson(){
-  /// if code 1 means success and other code means error
-   ///
-
- }
