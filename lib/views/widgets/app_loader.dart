@@ -25,17 +25,7 @@ class AppLoader {
 
   // show the loader by calling this method
  Future<void>  loaderShow() async {
-    showGeneralDialog(
-        context: context,
-        transitionDuration: const Duration(milliseconds: 400),
-        pageBuilder: (bc, ania, anis) {
-          return const Center(
-            child: CircularProgressIndicator(
-              color: Colors.amber,
-              semanticsLabel: 'Circular progress indicator',
-            ),
-          );
-        });
+    print('show loader');
   }
 }
 

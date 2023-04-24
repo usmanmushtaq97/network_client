@@ -4,21 +4,21 @@
 //
 
 import 'package:flutter/material.dart';
+import 'package:network_client/api/network/error_dialogs.dart';
+import 'package:network_client/get_it.dart';
 
 class ExceptionHelper<T> {
   void _validateRequest(dynamic data) {
     WidgetsBinding.instance.addPostFrameCallback((_) {
-
-
-
+      locator<ErrorDialog>().showIFError(message: data.message);
     });
   }
 
   /// the response
   processResponse(
     dynamic data,
-    Function onComplete,
-    Function onError, {
+      { required Function(dynamic data) onComplete,
+    required Function(dynamic data) onError,
     bool skipErrorDialog = false,
   }) {
     /// 1 means success

@@ -5,7 +5,7 @@
 enum Env { dev, uat, pro }
 class NetworkConfig {
   static var appMode = Env.dev;
-  final _dev = 'https://dev';
+  final _dev = 'https://api.planify.holiday/';
   final _uat = 'https://uat';
   final _pro = 'https://productions';
   // get the base url

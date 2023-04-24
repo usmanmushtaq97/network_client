@@ -5,10 +5,8 @@
 
 import 'dart:convert';
 import 'dart:io';
-import 'package:flutter/material.dart';
 import 'package:network_client/api/network/base_network.dart';
 import 'package:http/http.dart' as http;
-import 'package:network_client/api/network/network_interface.dart';
 import 'package:network_client/config/network_config.dart';
 import 'package:network_client/constants/app_constatns.dart';
 import 'package:network_client/views/widgets/app_loader.dart';
@@ -22,7 +20,7 @@ class NetWorkClient extends BaseApiService {
 
   static NetWorkClient get instance => _instance;
 
-  final token = NetworkInterFace().getToken();
+  final token='';
   dynamic header;
   final _baseUrl = NetworkConfig().getBaseUrl();
 
@@ -45,7 +43,7 @@ class NetWorkClient extends BaseApiService {
   Future postApi(
       {required String url,
       data,
-      bool loaderAllow = true,
+      bool loaderAllow = false,
       bool isAllowQueue = false,
       bool checkToken = true}) async {
     var response = await addToHttpPost(
@@ -86,17 +84,17 @@ class NetWorkClient extends BaseApiService {
   }
 
   Future<void> httpPost(String url, dynamic data,
-      {required Function onStart,
-      required Function onComplete,
-      required Function onError,
+      {required Function() onStart,
+      required Function(dynamic data) onComplete,
+      required Function() onError,
       bool checkToken = true}) async {
     // this method we can recognize the request on start mode
     onStart();
     if (checkToken) {
       header = {
         HttpHeaders.contentTypeHeader: 'application/json',
-        HttpHeaders.acceptCharsetHeader:'*/*',
-        HttpHeaders.authorizationHeader: token.toString()
+       // HttpHeaders.acceptCharsetHeader:'*/*',
+       // HttpHeaders.authorizationHeader: token.toString()
       };
     } else {
       header = {
@@ -104,7 +102,7 @@ class NetWorkClient extends BaseApiService {
         HttpHeaders.acceptCharsetHeader:'*/*',};
     }
     var urlComplete = _baseUrl + url;
-    appPrint('body############:$data');
+    appPrint('body############:${data.toString()}');
     appPrint('DebugBase############:$_baseUrl');
     appPrint('DebugURl############:$url');
     appPrint('CompleteURl############:$urlComplete');
@@ -233,19 +231,20 @@ class NetWorkClient extends BaseApiService {
   /// POST means post request
   ///  GET means get request
   Future<http.Response> analyticEngine(
-      {required url,
+      {required String url,
       required String requestType,
       dynamic body,
       dynamic header}) async {
     dynamic response;
-    var requestData = JsonDecoder(body);
+    var requestData = jsonEncode(body);
+    var completeUrl = Uri.parse(url);
     if (requestType == 'POST') {
-      response = await getClient()
-          .post(url, body: requestData, headers: header)
+      response = await http
+          .post(completeUrl, body: requestData, headers: header)
           .timeout(const Duration(seconds: AppConstants.apiTimeOut));
     } else if (requestType == 'GET') {
       response = await getClient()
-          .get(url, headers: header)
+          .get(completeUrl, headers: header)
           .timeout(const Duration(seconds: 90));
     }
     return response;
@@ -266,6 +265,7 @@ class NetWorkClient extends BaseApiService {
 
   // set Error for dialog purpose
   void setError(var errorMessage, ErrorType errorType) {
+    print(errorMessage);
     // here I will add own logic for setup dialog
     // need to show error dialog
     //  network level  Error dialog
