@@ -25,8 +25,8 @@ class _HomePageState extends State<HomePage> {
           TextButton(onPressed:() async{
             await mProvider.loginUserWithCredential();
             if(mProvider.login!.status == Status.COMPLETED){
-    if(mProvider.login?.data?.code == 0){
-     response = mProvider.login?.data.toString();
+           if(mProvider.login?.data?.code == 0){
+              response = mProvider.login?.data.toString();
     }
     }
 

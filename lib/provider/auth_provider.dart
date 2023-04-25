@@ -26,14 +26,12 @@ class AuthProvider with ChangeNotifier {
     var pass,
   }) async {
     final requestObject = {
-      "email": "testuser12345@mailinator.com", //email
-      "password": "12346789", // pass
-      "user_channel_type": "tiktok" // chanel type
+      "name": "morpheus",
+      "job": "leader"
     };
 
     /// sync data  base loading
     _login = NetWorkApiResponse.loading('loading');
-
     var data = _loginService.login(requestObject);
     locator<ExceptionHelper>().processResponse(data, onComplete: (data) {
       _login = NetWorkApiResponse.onCompleted(data);

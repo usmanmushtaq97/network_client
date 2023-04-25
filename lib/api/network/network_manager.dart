@@ -6,9 +6,8 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:network_client/api/network/base_network.dart';
-import 'package:http/http.dart' as http;
+import 'package:http/http.dart' as testHttp;
 import 'package:network_client/config/network_config.dart';
-import 'package:network_client/constants/app_constatns.dart';
 import 'package:network_client/views/widgets/app_loader.dart';
 import '../../constants/enums/error_type.dart';
 import '../../helper/utils.dart';
@@ -20,7 +19,7 @@ class NetWorkClient extends BaseApiService {
 
   static NetWorkClient get instance => _instance;
 
-  final token='';
+  final token = '';
   dynamic header;
   final _baseUrl = NetworkConfig().getBaseUrl();
 
@@ -93,13 +92,14 @@ class NetWorkClient extends BaseApiService {
     if (checkToken) {
       header = {
         HttpHeaders.contentTypeHeader: 'application/json',
-       // HttpHeaders.acceptCharsetHeader:'*/*',
-       // HttpHeaders.authorizationHeader: token.toString()
+        // HttpHeaders.acceptCharsetHeader:'*/*',
+        // HttpHeaders.authorizationHeader: token.toString()
       };
     } else {
       header = {
         HttpHeaders.contentTypeHeader: 'application/json',
-        HttpHeaders.acceptCharsetHeader:'*/*',};
+        HttpHeaders.acceptCharsetHeader: '*/*',
+      };
     }
     var urlComplete = _baseUrl + url;
     appPrint('body############:${data.toString()}');
@@ -197,9 +197,10 @@ class NetWorkClient extends BaseApiService {
       throw ('No Internet Connection');
     }
   }
-   /// process the response on the base
+
+  /// process the response on the base
   /// onComplete method
-  void _processResponse(http.Response response, url,
+  void _processResponse(testHttp.Response response, url,
       {required Function onComplete, required Function onError}) async {
     switch (response.statusCode) {
       case 200:
@@ -230,35 +231,33 @@ class NetWorkClient extends BaseApiService {
   /// This is a simple engin here we can handle type of request
   /// POST means post request
   ///  GET means get request
-  Future<http.Response> analyticEngine(
+  Future<dynamic> analyticEngine(
       {required String url,
       required String requestType,
       dynamic body,
       dynamic header}) async {
-    dynamic response;
-    var requestData = jsonEncode(body);
-    var completeUrl = Uri.parse(url);
-    if (requestType == 'POST') {
-      response = await http
-          .post(completeUrl, body: requestData, headers: header)
-          .timeout(const Duration(seconds: AppConstants.apiTimeOut));
-    } else if (requestType == 'GET') {
-      response = await getClient()
-          .get(completeUrl, headers: header)
-          .timeout(const Duration(seconds: 90));
+
+    final testURL = Uri.parse('https://jsonplaceholder.typicode.com/todos/1');
+    final response = await testHttp.get(testURL);
+
+    if (response.statusCode == 200) {
+      print(response.body);
+    } else {
+      print('Request failed with status: ${response.statusCode}.');
     }
+     
     return response;
   }
 
   /// http client is handle all even mutiple request going on server at same time
   /// for handle error exception I'm using this
   /// simple  use getClient()
-  http.Client getClient() {
-    var client = http.Client();
+  testHttp.Client getClient() {
+    var client = testHttp.Client();
     try {
-      client = http.Client();
-    } catch (e) {
-      appPrint(e.toString());
+      client = testHttp.Client();
+    } finally {
+      client.close();
     }
     return client;
   }
